@@ -89,29 +89,23 @@
             }
     </style>
 </head>
-<body onload="start()">
+<body onload="help()">
     <div id="all">
         <img id="wht" width="25" height="25" src="./white_daisy.png" alt="white daisy">
         <img id="blk" width="25" height="25" src="./black_daisy.png" alt="black daisy">
         <br />
         <header>
             <div>
-                <button class="noSelect" onclick="start()" id="playPause">
-                    RESET
-                </button>
-                <span>|</span>
-                <button class="noSelect" onclick="help()">
-                    INFO
-                </button>
-            </div>
-            <br />
-            <div>
                 <button class="noSelect" onclick="cycle()" id="playPause">
                     PLAY
                 </button>
-                <span>|</span>
+                <span> | </span>
                 <button class="noSelect" onclick="step()">
                     STEP
+                </button>
+                <span> | </span>
+                <button class="noSelect" onclick="start()" id="playPause">
+                    RESET
                 </button>
             </div>
             <br />

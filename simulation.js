@@ -22,6 +22,7 @@ function help() {
             modal.style.display = "none";
         }
     }
+    start();
 }
 
 
