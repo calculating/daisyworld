@@ -5,9 +5,10 @@ var lifeCycle;
 var wT = [];
 var bT = [];
 var pT = [];
+var sT = [];
 
 var modal;
-
+var time = 0;
 
 function help() {
     modal = document.getElementById("simInfo");
@@ -49,11 +50,13 @@ function start() {
         wT = [];
         bT = [];
         pT = [];
+        sT = [];
         data();
         for (let k = 0; k < 400; k++) {
             wT.push(wT[0]);
             bT.push(bT[0]);
             pT.push(pT[0]);
+            sT.push(sT[0]);
         }
         draw();
         clearInterval(lifeCycle);
@@ -73,6 +76,8 @@ function cycle() {
 }
 
 function step() {
+    //document.getElementById("sun").value = 50 - 0.25 * time;
+    time++;
     temp();
     life();
     data();
@@ -96,6 +101,7 @@ function data() {
     wT.push(wCount);
     bT.push(bCount);
     pT.push(Math.floor(tCount));
+    sT.push(document.getElementById("sun").value / 100 * 40 * 24);
 
     if (wT.length > 400) {
         wT = wT.slice(wT.length - 400, wT.length)
@@ -105,6 +111,9 @@ function data() {
     }
     if (pT.length > 400) {
         pT = pT.slice(pT.length - 400, pT.length)
+    }
+    if (sT.length > 400) {
+        sT = sT.slice(sT.length - 400, sT.length)
     }
 }
 
@@ -126,12 +135,12 @@ function life() {
                     }
                 }
 
-                if (Math.random() < 1 - 0.002 * Math.pow(25 - localPop, 2)) {
+                if (Math.random() < 1 - 0.0018 * Math.pow(25 - localPop, 2)) {
                     wrld[x][y].flwr = undefined;
 
 
 
-                } else if (Math.random() < 1 - 0.003 * Math.pow((-wrld[x][y].temp * 100), 2)) {
+                } else if (Math.random() < 1 - 0.0034 * Math.pow((-wrld[x][y].temp * 100), 2)) {
                     let newX = Math.floor(Math.random() * 3) - 1 + x;
                     let newY = Math.floor(Math.random() * 3) - 1 + y;
                     if (wrld[newX] !== undefined) {
@@ -154,15 +163,12 @@ function updateFlwr(element) {
     };
 }
 
-sun.oninput = function () {
+sun.onchange = function () {
     if (this.value > 10) {
         let tempIndicator = "";
         for (k = 0; k < Math.abs(Math.floor(this.value) / 10) - 1; k++) {
             tempIndicator += "🔥";
         }
-        /*for (k = 0; k < 5 - tempIndicator.length; k++) {
-            tempIndicator += "🌡️";
-        }*/
         document.getElementById("hotCold").innerHTML = tempIndicator;
 
     } else if (this.value < -10) {
@@ -170,9 +176,6 @@ sun.oninput = function () {
         for (k = 0; k < Math.abs(Math.floor(this.value) / 10) - 1; k++) {
             tempIndicator += "❄️";
         }
-        /*for (k = 0; k < 5 - tempIndicator.length; k++) {
-            tempIndicator += "🌡️";
-        }*/
         document.getElementById("hotCold").innerHTML = tempIndicator;
 
     } else {
@@ -184,6 +187,7 @@ sun.oninput = function () {
 
 function temp() {
     let sun = document.getElementById("sun").value / 100;
+    let alb = 0.04;
     wrld.forEach(element => element.forEach(element => element.temp = sun * 0.5));
     for (let x = 0; x < 80; x++) {
         for (let y = 0; y < 48; y++) {
@@ -195,10 +199,10 @@ function temp() {
                                 if (wrld[x + xl][y + yl] !== undefined) {
                                     if (wrld[x][y].flwr == 'w') {
                                         //let alb = sun * 0.4 + sun * 0.1 * (Math.sqrt(Math.pow(xl, 2) + Math.pow(yl, 2)) / 3.5);
-                                        wrld[x + xl][y + yl].temp -= 0.1 - 0.1 * Math.sqrt(Math.pow(xl, 2) + Math.pow(yl, 2)) / 3.5;
+                                        wrld[x + xl][y + yl].temp -= alb - alb * Math.sqrt(Math.pow(xl, 2) + Math.pow(yl, 2)) / 3.5;
                                     } else {
                                         //let alb = sun * 0.4 + sun * 0.1 * (Math.sqrt(Math.pow(xl, 2) + Math.pow(yl, 2)) / 3.5);
-                                        wrld[x + xl][y + yl].temp += 0.1 - 0.1 * Math.sqrt(Math.pow(xl, 2) + Math.pow(yl, 2)) / 3.5;
+                                        wrld[x + xl][y + yl].temp += alb - alb * Math.sqrt(Math.pow(xl, 2) + Math.pow(yl, 2)) / 3.5;
                                     }
                                 }
                             }
@@ -271,11 +275,20 @@ function draw() {
     }
     ctx.stroke();
 
-    ctx.strokeStyle = "#ff0000";
+    ctx.strokeStyle = "#ffc107";
     ctx.beginPath();
-    ctx.moveTo(0, -pT[0] + 300);
+    ctx.moveTo(0, -sT[0] * (30 / 48) + 300);
     for (let k = 0; k <= 400; k++) {
-        ctx.lineTo(1000 / 400 * k, -pT[k - 1] + 300);
+        ctx.lineTo(1000 / 400 * k, -sT[k - 1] * (30 / 48) + 300);
     }
     ctx.stroke();
+
+    ctx.strokeStyle = "#ff0000";
+    ctx.beginPath();
+    ctx.moveTo(0, -pT[0] * (30 / 24) + 300);
+    for (let k = 0; k <= 400; k++) {
+        ctx.lineTo(1000 / 400 * k, -pT[k - 1] * (30 / 24) + 300);
+    }
+    ctx.stroke();
+
 }
