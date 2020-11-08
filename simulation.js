@@ -6,6 +6,9 @@ var wT = [];
 var bT = [];
 var pT = [];
 
+var modal;
+
+
 function start() {
     if (/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent)) {
         document.getElementById('all').innerHTML = '<h1>View on a computer >:(</h1><br/><img src="linus.jpg" alt="ur bad" width="100%">'
@@ -36,8 +39,21 @@ function start() {
             pT.push(pT[0]);
         }
         draw();
+        modal = document.getElementById("simInfo");
+        modal.style.display = "block";
+
+        document.getElementsByClassName("close")[0].onclick = function () {
+            modal.style.display = "none";
+        }
+
+        window.onclick = function (event) {
+            if (event.target == modal) {
+                modal.style.display = "none";
+            }
+        }
     }
 }
+
 
 function cycle() {
     if (document.getElementById('playPause').innerHTML == 'PAUSE') {

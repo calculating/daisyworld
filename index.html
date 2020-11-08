@@ -48,6 +48,45 @@
         .slider {
             align-content: center;
         }
+
+        /* The Modal (background) */
+        .modal {
+            display: none; /* Hidden by default */
+            position: fixed; /* Stay in place */
+            z-index: 1; /* Sit on top */
+            padding-top: 10%; /* Location of the box */
+            left: 0;
+            top: 0;
+            width: 100%; /* Full width */
+            height: 100%; /* Full height */
+            overflow: auto; /* Enable scroll if needed */
+            background-color: rgb(0,0,0); /* Fallback color */
+            background-color: rgba(0,0,0,0.4); /* Black w/ opacity */
+        }
+
+        /* Modal Content */
+        .modal-content {
+            background-color: #9d9aab;
+            margin: auto;
+            padding: 20px;
+            border: 1px solid #888;
+            width: 40%;
+        }
+
+        /* The Close Button */
+        .close {
+            color: #ac4841;
+            float: right;
+            font-size: 40px;
+            font-weight: bold;
+        }
+
+            .close:hover,
+            .close:focus {
+                color: #c47e7a;
+                text-decoration: none;
+                cursor: pointer;
+            }
     </style>
 </head>
 <body onload="start()">
@@ -76,6 +115,28 @@
         <br />
         <canvas id="daisyworld" width="1000" height="600"></canvas>
         <script src="simulation.js"></script>
+
+        <div id="simInfo" class="modal">
+
+            <!-- Modal content -->
+            <div class="modal-content">
+                <span class="close">&times;</span>
+                <h3>
+                    Daisyworld
+                </h3>
+                <p>
+                    From Wikipedia, the free encyclopedia
+                    <br />
+                    <br />
+                    Daisyworld, a computer simulation, is a hypothetical world orbiting a star whose radiant energy is slowly increasing or decreasing. It is meant to mimic important elements of the Earth-Sun system, and was introduced by James Lovelock and Andrew Watson in a paper published in 1983[1] to illustrate the plausibility of the Gaia hypothesis. In the original 1983 version, Daisyworld is seeded with two varieties of daisy as its only life forms: black daisies and white daisies. White petaled daisies reflect light, while black petaled daisies absorb light. The simulation tracks the two daisy populations and the surface temperature of Daisyworld as the sun's rays grow more powerful. The surface temperature of Daisyworld remains almost constant over a broad range of solar output.
+                    <br /><br />
+                    Click <b>PLAY</b> to run the simulation, or <b>STEP</b> to go though one frame at a time. The slider controls the energy output of Daisyworld's sun.
+                    <br /><br />
+                    The red line shows the planet's average surface temperature, and the white and black lines show the diasy populations.
+                </p>
+            </div>
+
+        </div>
     </div>
 </body>
 </html>
