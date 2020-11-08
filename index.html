@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <link rel="shortcut icon" href="./favicon.ico">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" charset="utf-8" />
+    <title>Daisyworld</title>
+    <style>
+        canvas {
+            padding-left: 0;
+            padding-right: 0;
+            margin-left: auto;
+            margin-right: auto;
+            display: block;
+            background-color: #333;
+        }
+
+        h1 {
+            background-color: #fff;
+            font-size: 4rem;
+        }
+
+        body {
+            background-color: #1D1D1D;
+            margin-left: auto;
+            margin-right: auto;
+            width: 92%;
+            max-width: 960px;
+            padding-left: 2.275%;
+            padding-right: 2.275%;
+        }
+
+        header {
+            text-align: center;
+            display: block;
+            color: white;
+            cursor: context-menu;
+        }
+
+        .noSelect {
+            -webkit-touch-callout: none;
+            -webkit-user-select: none;
+            -khtml-user-select: none;
+            -moz-user-select: none;
+            -ms-user-select: none;
+            user-select: none;
+        }
+
+        .slider {
+            align-content: center;
+        }
+    </style>
+</head>
+<body onload="start()">
+    <div id="all">
+        <img id="wht" width="25" height="25" src="./white_daisy.png" alt="white daisy">
+        <img id="blk" width="25" height="25" src="./black_daisy.png" alt="black daisy">
+        <br />
+        <header>
+            <div>
+                <button class="noSelect" onclick="cycle()" id="playPause">
+                    PLAY
+                </button>
+                <span> | </span>
+                <button class="noSelect" onclick="step()">
+                    STEP
+                </button>
+                <span> | </span>
+                <button class="noSelect" onclick="start()" id="playPause">
+                    RESET
+                </button>
+            </div>
+            <br />
+            <input type="range" min="-50" max="50" value="0" class="slider" id="sun">
+            <div id="hotCold">🌡️</div>
+        </header>
+        <br />
+        <canvas id="daisyworld" width="1000" height="600"></canvas>
+        <script src="simulation.js"></script>
+    </div>
+</body>
+</html>
