@@ -89,9 +89,10 @@ function cycle() {
 function step() {
     if (time < 400) {
         document.getElementById("sun").value = -50 + 0.25 * time;
-    } else if (time < 800) {
-        document.getElementById("sun").value = 50 - 0.25 * (time - 400);
-    } else if (time == 800) {
+    } else if (time < 500) {
+    } else if (time < 900) {
+        document.getElementById("sun").value = 50 - 0.25 * (time - 500);
+    } else if (time == 1000) {
         time = 0
     }
     time++;
