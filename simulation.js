@@ -8,7 +8,8 @@ var pT = [];
 var sT = [];
 
 var modal;
-var time = 0;
+var time;
+var graph = 1000;
 
 function help() {
     modal = document.getElementById("simInfo");
@@ -25,7 +26,6 @@ function help() {
     }
     start();
 }
-
 
 function start() {
     if (/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent)) {
@@ -46,13 +46,15 @@ function start() {
                 }
             }
         }
+        document.getElementById("sun").value = 0;
         temp();
+        time = 200;
         wT = [];
         bT = [];
         pT = [];
         sT = [];
         data();
-        for (let k = 0; k < 400; k++) {
+        for (let k = 0; k < graph; k++) {
             wT.push(wT[0]);
             bT.push(bT[0]);
             pT.push(pT[0]);
@@ -61,22 +63,37 @@ function start() {
         draw();
         clearInterval(lifeCycle);
         document.getElementById('playPause').innerHTML = 'PLAY'
+
+        sun.oninput = function () {
+            time = 999;
+            sun.oninput = '';
+        }
+
+        sun.onchange = function () {
+            temp();
+            draw();
+        }
     }
 }
-
 
 function cycle() {
     if (document.getElementById('playPause').innerHTML == 'PAUSE') {
         clearInterval(lifeCycle);
-        document.getElementById('playPause').innerHTML = 'PLAY'
+        document.getElementById('playPause').innerHTML = 'PLAY';
     } else {
         lifeCycle = setInterval(step, 30);
-        document.getElementById('playPause').innerHTML = 'PAUSE'
+        document.getElementById('playPause').innerHTML = 'PAUSE';
     }
 }
 
 function step() {
-    //document.getElementById("sun").value = 50 - 0.25 * time;
+    if (time < 400) {
+        document.getElementById("sun").value = -50 + 0.25 * time;
+    } else if (time < 800) {
+        document.getElementById("sun").value = 50 - 0.25 * (time - 400);
+    } else if (time == 800) {
+        time = 0
+    }
     time++;
     temp();
     life();
@@ -103,17 +120,17 @@ function data() {
     pT.push(Math.floor(tCount));
     sT.push(document.getElementById("sun").value / 100 * 40 * 24);
 
-    if (wT.length > 400) {
-        wT = wT.slice(wT.length - 400, wT.length)
+    if (wT.length > graph) {
+        wT = wT.slice(wT.length - graph, wT.length)
     }
-    if (bT.length > 400) {
-        bT = bT.slice(bT.length - 400, bT.length)
+    if (bT.length > graph) {
+        bT = bT.slice(bT.length - graph, bT.length)
     }
-    if (pT.length > 400) {
-        pT = pT.slice(pT.length - 400, pT.length)
+    if (pT.length > graph) {
+        pT = pT.slice(pT.length - graph, pT.length)
     }
-    if (sT.length > 400) {
-        sT = sT.slice(sT.length - 400, sT.length)
+    if (sT.length > graph) {
+        sT = sT.slice(sT.length - graph, sT.length)
     }
 }
 
@@ -123,8 +140,8 @@ function life() {
             if (wrld[x][y].flwr !== undefined && wrld[x][y].flwr.includes('t') !== true) {
 
                 let localPop = 0;
-                for (let xl = -3; xl < 4; xl++) {
-                    for (let yl = -3; yl < 4; yl++) {
+                for (let xl = -4; xl < 5; xl++) {
+                    for (let yl = -4; yl < 5; yl++) {
                         if (wrld[x + xl] !== undefined) {
                             if (wrld[x + xl][y + yl] !== undefined) {
                                 if (wrld[x + xl][y + yl].flwr == wrld[x][y].flwr) {
@@ -135,7 +152,7 @@ function life() {
                     }
                 }
 
-                if (Math.random() < 1 - 0.0018 * Math.pow(25 - localPop, 2)) {
+                if (Math.random() < 1 - 0.00068 * Math.pow(40 - localPop, 2)) {
                     wrld[x][y].flwr = undefined;
 
 
@@ -161,28 +178,6 @@ function updateFlwr(element) {
     } else if (element.flwr == 'bt') {
         element.flwr = 'b'
     };
-}
-
-sun.onchange = function () {
-    if (this.value > 10) {
-        let tempIndicator = "";
-        for (k = 0; k < Math.abs(Math.floor(this.value) / 10) - 1; k++) {
-            tempIndicator += "🔥";
-        }
-        document.getElementById("hotCold").innerHTML = tempIndicator;
-
-    } else if (this.value < -10) {
-        let tempIndicator = "";
-        for (k = 0; k < Math.abs(Math.floor(this.value) / 10) - 1; k++) {
-            tempIndicator += "❄️";
-        }
-        document.getElementById("hotCold").innerHTML = tempIndicator;
-
-    } else {
-        document.getElementById("hotCold").innerHTML = "🌡️";
-    }
-    temp();
-    draw();
 }
 
 function temp() {
@@ -215,23 +210,49 @@ function temp() {
 }
 
 function draw() {
+
+    if (document.getElementById("sun").value >= 10) {
+        let tempIndicator = "";
+        for (k = 0; k <= Math.abs(Math.floor(document.getElementById("sun").value) / 10) - 1; k++) {
+            if (k !== 4) {
+                tempIndicator += "🔥";
+            }
+        }
+        document.getElementById("hotCold").innerHTML = tempIndicator;
+
+    } else if (document.getElementById("sun").value < -10) {
+        let tempIndicator = "";
+        for (k = 0; k < Math.abs(Math.floor(document.getElementById("sun").value) / 10) - 1; k++) {
+            tempIndicator += "❄️";
+        }
+        document.getElementById("hotCold").innerHTML = tempIndicator;
+
+    } else {
+        document.getElementById("hotCold").innerHTML = "🌡️";
+    }
+
     ctx = document.getElementById('daisyworld').getContext('2d');
     ctx.globalAlpha = 1;
+    ctx.canvas.width = window.innerWidth * (1000 / 1920);
+    ctx.canvas.height = ctx.canvas.width * (600 / 1000);
+    let sX = ctx.canvas.width / 80
+    let sY = ctx.canvas.height / 48
+    let mg = 0.7;
     for (let x = 0; x < 80; x++) {
         for (let y = 0; y < 48; y++) {
             ctx.fillStyle = "#7a7694";
-            ctx.fillRect(x * 12.5, y * 12.5, 12.5, 12.5);
+            ctx.fillRect(x * sX, y * sY, sX + mg, sY + mg);
 
             ctx.fillStyle = "#f44336";
             if (wrld[x][y].temp > 0) {
                 ctx.globalAlpha = wrld[x][y].temp;
-                ctx.fillRect(x * 12.5, y * 12.5, 12.5, 12.5);
+                ctx.fillRect(x * sX, y * sY, sX + mg, sY + mg);
             }
 
             ctx.fillStyle = "#03a9f4";
             if (wrld[x][y].temp < 0) {
                 ctx.globalAlpha = -wrld[x][y].temp;
-                ctx.fillRect(x * 12.5, y * 12.5, 12.5, 12.5);
+                ctx.fillRect(x * sX, y * sY, sX + mg, sY + mg);
             }
 
             /*if (Math.abs(25 - wrld[x][y].temp * 100) < 10) {
@@ -243,11 +264,11 @@ function draw() {
             ctx.globalAlpha = 1;
             if (wrld[x][y].flwr == 'w') {
                 let flower = wht;
-                ctx.drawImage(flower, (x) * 12.5, (y) * 12.5, 12.5, 12.5);
+                ctx.drawImage(flower, (x) * sX, (y) * sY, sX, sY);
             }
             if (wrld[x][y].flwr == 'b') {
                 let flower = blk;
-                ctx.drawImage(flower, (x) * 12.5, (y) * 12.5, 12.5, 12.5);
+                ctx.drawImage(flower, (x) * sX, (y) * sY, sX, sY);
             }
             //ctx.fillStyle = "#000";
             //ctx.font = "10px Arial";
@@ -255,39 +276,39 @@ function draw() {
         }
     }
 
-    ctx.lineWidth = 3;
-    ctx.globalAlpha = 0.5;
+    ctx.lineWidth = 2;
+    ctx.globalAlpha = 0.4;
 
 
     ctx.strokeStyle = "#fff";
     ctx.beginPath();
-    ctx.moveTo(0, 600 - Math.floor(wT[0] / 350 * 600 + 1));
-    for (let k = 0; k <= 400; k++) {
-        ctx.lineTo(1000 / 400 * k, 600 - Math.floor(wT[k - 1] / 400 * 600 + 3));
+    ctx.moveTo(0, 600 - Math.floor(wT[0] / graph * ctx.canvas.height + 3));
+    for (let k = 0; k <= graph; k++) {
+        ctx.lineTo(ctx.canvas.width / graph * k, 600 - Math.floor(wT[k - 1] / graph * ctx.canvas.height + ctx.lineWidth));
     }
     ctx.stroke();
 
     ctx.strokeStyle = "#000";
     ctx.beginPath();
-    ctx.moveTo(0, 600 - Math.floor(bT[0] / 400 * 600 + 1));
-    for (let k = 0; k <= 400; k++) {
-        ctx.lineTo(1000 / 400 * k, 600 - Math.floor(bT[k - 1] / 400 * 600 + 3));
+    ctx.moveTo(0, 600 - Math.floor(bT[0] / graph * ctx.canvas.height + 3));
+    for (let k = 0; k <= graph; k++) {
+        ctx.lineTo(ctx.canvas.width / graph * k, 600 - Math.floor(bT[k - 1] / graph * ctx.canvas.height + ctx.lineWidth));
     }
     ctx.stroke();
 
     ctx.strokeStyle = "#ffc107";
     ctx.beginPath();
-    ctx.moveTo(0, -sT[0] * (30 / 48) + 300);
-    for (let k = 0; k <= 400; k++) {
-        ctx.lineTo(1000 / 400 * k, -sT[k - 1] * (30 / 48) + 300);
+    ctx.moveTo(0, -sT[0] * (ctx.canvas.height / 2 / 480) + ctx.canvas.height / 2);
+    for (let k = 0; k <= graph; k++) {
+        ctx.lineTo(ctx.canvas.width / graph * k, -sT[k - 1] * (ctx.canvas.height / 2 / 480) + ctx.canvas.height / 2);
     }
     ctx.stroke();
 
     ctx.strokeStyle = "#ff0000";
     ctx.beginPath();
-    ctx.moveTo(0, -pT[0] * (30 / 24) + 300);
-    for (let k = 0; k <= 400; k++) {
-        ctx.lineTo(1000 / 400 * k, -pT[k - 1] * (30 / 24) + 300);
+    ctx.moveTo(0, -pT[0] * (ctx.canvas.height / 2 / 240) + ctx.canvas.height / 2);
+    for (let k = 0; k <= graph; k++) {
+        ctx.lineTo(ctx.canvas.width / graph * k, -pT[k - 1] * (ctx.canvas.height / 2 / 240) + ctx.canvas.height / 2);
     }
     ctx.stroke();
 
