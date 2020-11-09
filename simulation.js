@@ -98,10 +98,10 @@ function start() {
         for (let x = 0; x < 80; x++) {
             wrld[x] = [];
             for (let y = 0; y < 48; y++) {
-                wrld[x][y] = { flwr: undefined, temp: undefined, genetics: 1};
+                wrld[x][y] = { flwr: undefined, temp: undefined, genetics: 1 };
                 if (Math.random() < 0.01) {
                     if (Math.random() < 0.5) {
-                        wrld[x][y] = { flwr: 'w', temp: undefined, genetics: 1};
+                        wrld[x][y] = { flwr: 'w', temp: undefined, genetics: 1 };
                     } else {
                         wrld[x][y] = { flwr: 'b', temp: undefined, genetics: 1 };
                     }
@@ -221,6 +221,7 @@ function data() {
 }
 
 function life() {
+    let gPop = { w: wT[graph - 1], b: bT[graph - 1] };
     for (let x = 0; x < 80; x++) {
         for (let y = 0; y < 48; y++) {
             if ((wrld[x][y].flwr == 'b' || wrld[x][y].flwr == 'w') && wrld[x][y].flwr.includes('t') !== true) {
@@ -238,22 +239,37 @@ function life() {
                     }
                 }
 
+                /*if (Math.random() < 2.2 * (1 - 0.00015 * Math.pow(81 - localPop, 2)) && gPop[wrld[x][y].flwr] > 15 ) {
+                    wrld[x][y].flwr = undefined;
+                    wrld[x][y].genetics = 1;
+                    gPop[wrld[x][y].flwr]--;
+
+                } else if (localPop > 1) {
+                    wrld[x][y].flwr = undefined;
+                    wrld[x][y].genetics = 1;
+                    gPop[wrld[x][y].flwr]--;
+                }*/
                 if (Math.random() < 2.2 * (1 - 0.00016 * Math.pow(81 - localPop, 2))) {
                     wrld[x][y].flwr = undefined;
                     wrld[x][y].genetics = 1;
+                    gPop[wrld[x][y].flwr]--;
 
-
-                } else if (Math.random() < 1 - 0.0034 * Math.pow((-wrld[x][y].temp * 100), 2)) {
+                } else if (Math.random() < 1 - 0.0034 * Math.pow(wrld[x][y].temp * 100, 2)) {
                     let newX = Math.floor(Math.random() * 3) - 1 + x;
                     let newY = Math.floor(Math.random() * 3) - 1 + y;
                     if (wrld[newX] !== undefined) {
                         if (wrld[newX][newY] !== undefined) {
                             if (wrld[newX][newY].flwr == undefined) {
                                 wrld[newX][newY].flwr = wrld[x][y].flwr + 't';
+                                let variability = 0.1;
                                 if (evT == false) {
                                     wrld[newX][newY].genetics = wrld[x][y].genetics;
                                 } else if (wrld[x][y].genetics > 0.25 && wrld[x][y].genetics < 1.75) {
-                                    wrld[newX][newY].genetics = wrld[x][y].genetics + Math.random() / 10 - 0.05;
+                                    wrld[newX][newY].genetics = wrld[x][y].genetics + Math.random() * variability - variability / 2;
+                                } else if (wrld[x][y].genetics < 0.25) {
+                                    wrld[newX][newY].genetics = wrld[x][y].genetics + variability / 10;
+                                } else if (wrld[x][y].genetics > 1.75) {
+                                    wrld[newX][newY].genetics = wrld[x][y].genetics - variability / 10;
                                 } else {
                                     wrld[newX][newY].genetics = wrld[x][y].genetics;
                                 }
@@ -286,7 +302,9 @@ function life() {
                     if (wrld[newX] !== undefined) {
                         if (wrld[newX][newY] !== undefined) {
                             if (wrld[newX][newY].flwr == 'b' || wrld[newX][newY].flwr == 'w') {
-                                wrld[newX][newY].flwr = wrld[x][y].flwr + 't';
+                                if (gPop[wrld[newX][newY].flwr] > 3) {
+                                    wrld[newX][newY].flwr = wrld[x][y].flwr + 't';
+                                }
                             }
                         }
                     }
@@ -397,7 +415,8 @@ function draw() {
             }*/
 
             ctx.globalAlpha = 1;
-            let geneticSize = (wrld[x][y].genetics - 1) * 7;
+            let geneticSize = (wrld[x][y].genetics - 1) * 10 + 3;
+
             if (wrld[x][y].flwr == 'w') {
                 let flower = wht;
                 ctx.drawImage(flower, (x) * sX - geneticSize, (y) * sY - geneticSize, sX + geneticSize, sY + geneticSize);
