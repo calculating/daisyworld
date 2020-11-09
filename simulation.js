@@ -311,8 +311,8 @@ function life() {
                 }
 
                 for (let attempts = 0; attempts < 2; attempts++) {
-                    let newX = Math.floor(Math.random() * 5) - 2 + x;
-                    let newY = Math.floor(Math.random() * 5) - 2 + y;
+                    let newX = Math.floor(Math.random() * 7) - 3 + x;
+                    let newY = Math.floor(Math.random() * 7) - 3 + y;
                     if (wrld[newX] !== undefined) {
                         if (wrld[newX][newY] !== undefined) {
                             if (wrld[newX][newY].flwr == 'b' || wrld[newX][newY].flwr == 'w') {
