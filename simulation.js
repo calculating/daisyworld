@@ -187,6 +187,7 @@ function temp() {
     wrld.forEach(element => element.forEach(element => element.temp = sun * 0.5));
     for (let x = 0; x < 80; x++) {
         for (let y = 0; y < 48; y++) {
+            wrld[x][y].temp += 0.0265 - 0.00013 * Math.pow(24 - y, 2)
             if (wrld[x][y].flwr !== undefined) {
                 for (let xl = -5; xl < 6; xl++) {
                     for (let yl = -5; yl < 6; yl++) {
