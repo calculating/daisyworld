@@ -187,6 +187,9 @@
         <img id="wht" width="25" height="25" src="./white_daisy.png" alt="white daisy" />
         <img id="blk" width="25" height="25" src="./black_daisy.png" alt="black daisy" />
         <img id="der" width="25" height="25" src="./deer.png" alt="frearsome predator" />
+        <audio id="time" loop>
+            <source src="./time.mp3" type="audio/mpeg">
+        </audio>
         <br />
         <header>
             <div>
@@ -209,36 +212,40 @@
                 <button class="pixel" onclick="evolve()" id="evolution">
                     EVOLVE
                 </button>
-            </div>
-            <br />
-            <input type="range" min="-50" max="50" value="0" class="slider" id="sun" step="0.1">
-            <div id="hotCold">🌡️</div>
-        </header>
-        <br />
-        <canvas id="daisyworld" width="0" height="0"></canvas>
-        <script src="simulation.js"></script>
 
-        <div id="simInfo" class="modal">
-
-            <!-- Modal content -->
-            <div class="modal-content">
-                <span class="close">&times;</span>
-                <h3>
-                    Daisyworld
-                </h3>
-                <p>
-                    <i>From Wikipedia, the free encyclopedia</i>
-                    <br />
-                    <br />
-                    Daisyworld, a computer simulation, is a hypothetical world orbiting a star whose radiant energy is slowly increasing or decreasing. It is meant to mimic important elements of the Earth-Sun system, and was introduced by James Lovelock and Andrew Watson in a paper published in 1983 to illustrate the plausibility of the Gaia hypothesis. In the original 1983 version, Daisyworld is seeded with two varieties of daisy as its only life forms: black daisies and white daisies. White petaled daisies reflect light, while black petaled daisies absorb light. The simulation tracks the two daisy populations and the surface temperature of Daisyworld as the sun's rays grow more powerful. The surface temperature of Daisyworld remains almost constant over a broad range of solar output.
-                    <br /><br />
-                    Click <b>PLAY</b> to run the simulation, or <b>STEP</b> to go though one frame at a time. The slider controls the energy output of Daisyworld's sun.
-                    <br /><br />
-                    The <i>yellow</i> line shows the heat coming from the sun, the <i>red</i> line shows the planet's average surface temperature, and the <i>white</i> and <i>black</i> lines show the diasy populations.
-                </p>
-            </div>
-
+                <!--<button class="pixel" onclick="audioToggle()" id="music">
+                    MUTE
+                </button>-->
         </div>
+        <br />
+        <input type="range" min="-50" max="50" value="0" class="slider" id="sun" step="0.1">
+        <div id="hotCold">🌡️</div>
+    </header>
+    <br />
+    <canvas id="daisyworld" width="0" height="0"></canvas>
+    <script src="simulation.js"></script>
+
+    <div id="simInfo" class="modal">
+
+        <!-- Modal content -->
+                <div class="modal-content">
+                    <span class="close">&times;</span>
+                    <h3>
+                        Daisyworld
+                    </h3>
+                    <p>
+                        <i>From Wikipedia, the free encyclopedia</i>
+                        <br />
+                        <br />
+                        Daisyworld, a computer simulation, is a hypothetical world orbiting a star whose radiant energy is slowly increasing or decreasing. It is meant to mimic important elements of the Earth-Sun system, and was introduced by James Lovelock and Andrew Watson in a paper published in 1983 to illustrate the plausibility of the Gaia hypothesis. In the original 1983 version, Daisyworld is seeded with two varieties of daisy as its only life forms: black daisies and white daisies. White petaled daisies reflect light, while black petaled daisies absorb light. The simulation tracks the two daisy populations and the surface temperature of Daisyworld as the sun's rays grow more powerful. The surface temperature of Daisyworld remains almost constant over a broad range of solar output.
+                        <br /><br />
+                        Click <b>PLAY</b> to run the simulation, or <b>STEP</b> to go though one frame at a time. The slider controls the energy output of Daisyworld's sun.
+                        <br /><br />
+                        The <i>yellow</i> line shows the heat coming from the sun, the <i>red</i> line shows the planet's average surface temperature, and the <i>white</i> and <i>black</i> lines show the diasy populations.
+                    </p>
+                </div>
+
+            </div>
     </div>
 </body>
 </html>

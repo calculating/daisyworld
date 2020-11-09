@@ -29,6 +29,7 @@ function help() {
             modal.style.display = "none";
         }
     }
+    audioToggle();
     start();
 }
 
@@ -156,9 +157,22 @@ function cycle() {
     if (document.getElementById('playPause').innerHTML == 'PAUSE') {
         clearInterval(lifeCycle);
         document.getElementById('playPause').innerHTML = 'PLAY';
+        document.getElementById("time").pause();
     } else {
         lifeCycle = setInterval(step, 30);
         document.getElementById('playPause').innerHTML = 'PAUSE';
+        document.getElementById("time").play();
+    }
+}
+
+function audioToggle() {
+    let a = document.getElementById("time");
+    if (a.volume > 0) {
+        a.volume = 0;
+        document.getElementById("music").classList.add('green');
+    } else {
+        a.volume = 1;
+        document.getElementById("music").classList.remove('green');
     }
 }
 
