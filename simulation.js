@@ -10,6 +10,7 @@ var dT = [];
 
 var eqT = false;
 var prT = false;
+var evT = false;
 
 var modal;
 var time;
@@ -39,6 +40,19 @@ function equator() {
     } else {
         eqT = false;
         document.getElementById("equator").classList.remove('green');
+    }
+    temp();
+    draw();
+}
+
+function evolve() {
+    if (evT == false) {
+        evT = true;
+        document.getElementById("evolution").classList.add('green');
+    } else {
+        evT = false;
+        document.getElementById("evolution").classList.remove('green');
+        wrld.forEach(element => element.forEach(element => element.genetics = 1));
     }
     temp();
     draw();
@@ -84,12 +98,12 @@ function start() {
         for (let x = 0; x < 80; x++) {
             wrld[x] = [];
             for (let y = 0; y < 48; y++) {
-                wrld[x][y] = { flwr: undefined, temp: undefined };
+                wrld[x][y] = { flwr: undefined, temp: undefined, genetics: 1};
                 if (Math.random() < 0.01) {
                     if (Math.random() < 0.5) {
-                        wrld[x][y] = { flwr: 'w', temp: undefined };
+                        wrld[x][y] = { flwr: 'w', temp: undefined, genetics: 1};
                     } else {
-                        wrld[x][y] = { flwr: 'b', temp: undefined };
+                        wrld[x][y] = { flwr: 'b', temp: undefined, genetics: 1 };
                     }
                 }
             }
@@ -130,6 +144,10 @@ function start() {
         if (prT == true) {
             predator();
             predator();
+        }
+        if (evT == true) {
+            evolve();
+            evolve();
         }
     }
 }
@@ -222,7 +240,7 @@ function life() {
 
                 if (Math.random() < 2.2 * (1 - 0.00016 * Math.pow(81 - localPop, 2))) {
                     wrld[x][y].flwr = undefined;
-
+                    wrld[x][y].genetics = 1;
 
 
                 } else if (Math.random() < 1 - 0.0034 * Math.pow((-wrld[x][y].temp * 100), 2)) {
@@ -232,6 +250,13 @@ function life() {
                         if (wrld[newX][newY] !== undefined) {
                             if (wrld[newX][newY].flwr == undefined) {
                                 wrld[newX][newY].flwr = wrld[x][y].flwr + 't';
+                                if (evT == false) {
+                                    wrld[newX][newY].genetics = wrld[x][y].genetics;
+                                } else if (wrld[x][y].genetics > 0.25 && wrld[x][y].genetics < 1.75) {
+                                    wrld[newX][newY].genetics = wrld[x][y].genetics + Math.random() / 10 - 0.05;
+                                } else {
+                                    wrld[newX][newY].genetics = wrld[x][y].genetics;
+                                }
                             }
                         }
                     }
@@ -293,6 +318,7 @@ function temp() {
                 wrld[x][y].temp += 0.0265 - 0.00013 * Math.pow(24 - y, 2);
             }
             if (wrld[x][y].flwr !== undefined) {
+                let flowerTemp = alb * wrld[x][y].genetics;
                 for (let xl = -5; xl < 6; xl++) {
                     for (let yl = -5; yl < 6; yl++) {
                         if (Math.sqrt(Math.pow(xl, 2) + Math.pow(yl, 2)) < 3.5) {
@@ -300,10 +326,10 @@ function temp() {
                                 if (wrld[x + xl][y + yl] !== undefined) {
                                     if (wrld[x][y].flwr == 'w') {
                                         //let alb = sun * 0.4 + sun * 0.1 * (Math.sqrt(Math.pow(xl, 2) + Math.pow(yl, 2)) / 3.5);
-                                        wrld[x + xl][y + yl].temp -= alb - alb * Math.sqrt(Math.pow(xl, 2) + Math.pow(yl, 2)) / 3.5;
+                                        wrld[x + xl][y + yl].temp -= flowerTemp - flowerTemp * Math.sqrt(Math.pow(xl, 2) + Math.pow(yl, 2)) / 3.5;
                                     } else if (wrld[x][y].flwr == 'b') {
                                         //let alb = sun * 0.4 + sun * 0.1 * (Math.sqrt(Math.pow(xl, 2) + Math.pow(yl, 2)) / 3.5);
-                                        wrld[x + xl][y + yl].temp += alb - alb * Math.sqrt(Math.pow(xl, 2) + Math.pow(yl, 2)) / 3.5;
+                                        wrld[x + xl][y + yl].temp += flowerTemp - flowerTemp * Math.sqrt(Math.pow(xl, 2) + Math.pow(yl, 2)) / 3.5;
                                     }
                                 }
                             }
@@ -371,13 +397,14 @@ function draw() {
             }*/
 
             ctx.globalAlpha = 1;
+            let geneticSize = (wrld[x][y].genetics - 1) * 7;
             if (wrld[x][y].flwr == 'w') {
                 let flower = wht;
-                ctx.drawImage(flower, (x) * sX, (y) * sY, sX, sY);
+                ctx.drawImage(flower, (x) * sX - geneticSize, (y) * sY - geneticSize, sX + geneticSize, sY + geneticSize);
             }
             if (wrld[x][y].flwr == 'b') {
                 let flower = blk;
-                ctx.drawImage(flower, (x) * sX, (y) * sY, sX, sY);
+                ctx.drawImage(flower, (x) * sX - geneticSize, (y) * sY - geneticSize, sX + geneticSize, sY + geneticSize);
             }
             if (wrld[x][y].flwr == 'd') {
                 let flower = der;
@@ -404,7 +431,7 @@ function draw() {
 
     ctx.strokeStyle = "#ff0000";
     ctx.beginPath();
-    ctx.moveTo(0, -pT[0] * (ctx.canvas.height / 2 / 240) + ctx.canvas.height / 2);
+    ctx.moveTo(0, -pT[0] * (ctx.canvas.height / (80 * 48) * 2) + ctx.canvas.height / 2);
     for (let k = 0; k <= graph; k++) {
         ctx.lineTo(ctx.canvas.width / graph * k, -pT[k - 1] * (ctx.canvas.height / (80 * 48) * 2) + ctx.canvas.height / 2);
     }
