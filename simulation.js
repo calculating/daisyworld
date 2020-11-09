@@ -169,10 +169,10 @@ function audioToggle() {
     let a = document.getElementById("time");
     if (a.volume > 0) {
         a.volume = 0;
-        document.getElementById("music").classList.add('green');
+        //document.getElementById("music").classList.add('green');
     } else {
         a.volume = 1;
-        document.getElementById("music").classList.remove('green');
+        //document.getElementById("music").classList.remove('green');
     }
 }
 
