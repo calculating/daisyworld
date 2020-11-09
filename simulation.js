@@ -65,7 +65,7 @@ function start() {
         document.getElementById('playPause').innerHTML = 'PLAY'
 
         sun.oninput = function () {
-            time = 999;
+            time = 9999;
             sun.oninput = '';
         }
 
