@@ -293,8 +293,8 @@ function life() {
                 }
             } else if (wrld[x][y].flwr == 'd') {
                 let localPop = 0;
-                for (let xl = -12; xl < 13; xl++) {
-                    for (let yl = -12; yl < 13; yl++) {
+                for (let xl = -7; xl < 8; xl++) {
+                    for (let yl = -7; yl < 8; yl++) {
                         if (wrld[x + xl] !== undefined) {
                             if (wrld[x + xl][y + yl] !== undefined) {
                                 if (wrld[x + xl][y + yl].flwr == wrld[x][y].flwr) {
@@ -310,13 +310,14 @@ function life() {
                     }
                 }
 
-                for (let attempts = 0; attempts < 2; attempts++) {
+                for (let attempts = 0; attempts < 3; attempts++) {
                     let newX = Math.floor(Math.random() * 7) - 3 + x;
                     let newY = Math.floor(Math.random() * 7) - 3 + y;
                     if (wrld[newX] !== undefined) {
                         if (wrld[newX][newY] !== undefined) {
                             if (wrld[newX][newY].flwr == 'b' || wrld[newX][newY].flwr == 'w') {
                                 if (gPop[wrld[newX][newY].flwr] > 3) {
+                                    gPop[wrld[newX][newY].flwr]--;
                                     wrld[newX][newY].flwr = wrld[x][y].flwr + 't';
                                 }
                             }
