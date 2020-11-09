@@ -111,7 +111,10 @@ function start() {
         }
         document.getElementById("sun").value = 0;
         temp();
-        time = 200;
+        time = 1;
+        if (Math.random() < 0.5) {
+            time = 500;
+        }
         wT = [];
         bT = [];
         pT = [];
@@ -177,13 +180,18 @@ function audioToggle() {
 }
 
 function step() {
-    if (time < 400) {
+    /*if (time < 400) {
         document.getElementById("sun").value = -50 + 0.25 * time;
     } else if (time < 500) {
     } else if (time < 900) {
         document.getElementById("sun").value = 50 - 0.25 * (time - 500);
     } else if (time == 1000) {
         time = 0
+    }*/
+    if (time < 1000) {
+        document.getElementById("sun").value = 50 * Math.sin( time / 1000 * 2 * Math.PI );
+    } else if (time == 1000) {
+        time = 1;
     }
     time++;
     temp();
