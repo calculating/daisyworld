@@ -29,7 +29,7 @@ function help() {
 
 function start() {
     if (/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent)) {
-        document.getElementById('all').innerHTML = '<h1>View on a computer >:(</h1><br/><img src="linus.jpg" alt="ur bad" width="100%">'
+        document.getElementById('all').innerHTML = '<h1>View on a computer please</h1><br/><img src="linus.jpg" alt="ur bad" width="100%">'
     } else {
         document.getElementById('wht').hidden = true;
         document.getElementById('blk').hidden = true;
