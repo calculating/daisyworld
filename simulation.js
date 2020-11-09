@@ -241,8 +241,8 @@ function life() {
             if ((wrld[x][y].flwr == 'b' || wrld[x][y].flwr == 'w') && wrld[x][y].flwr.includes('t') !== true) {
 
                 let localPop = 0;
-                for (let xl = -4; xl < 5; xl++) {
-                    for (let yl = -4; yl < 5; yl++) {
+                for (let xl = -5; xl < 6; xl++) {
+                    for (let yl = -5; yl < 6; yl++) {
                         if (wrld[x + xl] !== undefined) {
                             if (wrld[x + xl][y + yl] !== undefined) {
                                 if (wrld[x + xl][y + yl].flwr == wrld[x][y].flwr) {
@@ -263,7 +263,7 @@ function life() {
                     wrld[x][y].genetics = 1;
                     gPop[wrld[x][y].flwr]--;
                 }*/
-                if (Math.random() < 2.2 * (1 - 0.00016 * Math.pow(81 - localPop, 2))) {
+                if (Math.random() < 1.5 * (1 - 0.000103 * Math.pow(100 - localPop, 2))) {
                     wrld[x][y].flwr = undefined;
                     wrld[x][y].genetics = 1;
                     gPop[wrld[x][y].flwr]--;
