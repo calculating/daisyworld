@@ -59,7 +59,13 @@
                 }
 
 
+        .green {
+            background-color: #8aaa66;
+        }
 
+            .green:hover {
+                background-color: #809269;
+            }
 
 
 
@@ -178,8 +184,9 @@
 </head>
 <body onload="help()">
     <div id="all">
-        <img id="wht" width="25" height="25" src="./white_daisy.png" alt="white daisy">
-        <img id="blk" width="25" height="25" src="./black_daisy.png" alt="black daisy">
+        <img id="wht" width="25" height="25" src="./white_daisy.png" alt="white daisy" />
+        <img id="blk" width="25" height="25" src="./black_daisy.png" alt="black daisy" />
+        <img id="der" width="25" height="25" src="./deer.png" alt="frearsome predator" />
         <br />
         <header>
             <div>
@@ -193,6 +200,14 @@
 
                 <button class="pixel" onclick="start()" id="playPause">
                     RESET
+                </button>
+
+                <button class="pixel" onclick="equator()" id="equator">
+                    EQUATOR
+                </button>
+
+                <button class="pixel" onclick="predator()" id="predator">
+                    DEER
                 </button>
             </div>
             <br />

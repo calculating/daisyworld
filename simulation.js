@@ -6,6 +6,10 @@ var wT = [];
 var bT = [];
 var pT = [];
 var sT = [];
+var dT = [];
+
+var eqT = false;
+var prT = false;
 
 var modal;
 var time;
@@ -27,12 +31,56 @@ function help() {
     start();
 }
 
+
+function equator() {
+    if (eqT == false) {
+        eqT = true;
+        document.getElementById("equator").classList.add('green');
+    } else {
+        eqT = false;
+        document.getElementById("equator").classList.remove('green');
+    }
+    temp();
+    draw();
+}
+
+function predator() {
+    if (prT == false) {
+        prT = true;
+        document.getElementById("predator").classList.add('green');
+        for (let x = 0; x < 80; x++) {
+            for (let y = 0; y < 48; y++) {
+                if (Math.random() < 0.003 && wrld[x][y].flwr == undefined) {
+                    wrld[x][y].flwr = 'd';
+                }
+            }
+        }
+        data();
+        for (let k = 0; k < graph; k++) {
+            dT.push(dT[0]);
+        }
+    } else {
+        prT = false;
+        document.getElementById("predator").classList.remove('green');
+        for (let x = 0; x < 80; x++) {
+            for (let y = 0; y < 48; y++) {
+                if (wrld[x][y].flwr == 'd') {
+                    wrld[x][y].flwr = undefined;
+                }
+            }
+        }
+        dT = [];
+    }
+    draw();
+}
+
 function start() {
     if (/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent)) {
         document.getElementById('all').innerHTML = '<h1>View on a computer please</h1><br/><img src="linus.jpg" alt="ur bad" width="100%">'
     } else {
         document.getElementById('wht').hidden = true;
         document.getElementById('blk').hidden = true;
+        document.getElementById('der').hidden = true;
         for (let x = 0; x < 80; x++) {
             wrld[x] = [];
             for (let y = 0; y < 48; y++) {
@@ -73,6 +121,16 @@ function start() {
             temp();
             draw();
         }
+
+        //config refresh
+        if (eqT == true) {
+            equator();
+            equator();
+        }
+        if (prT == true) {
+            predator();
+            predator();
+        }
     }
 }
 
@@ -105,21 +163,27 @@ function step() {
 function data() {
     let wCount = 0;
     let bCount = 0;
+    let dCount = 0;
     let tCount = 0;
-    for (let x = 0; x < 40; x++) {
-        for (let y = 0; y < 24; y++) {
+    for (let x = 0; x < 80; x++) {
+        for (let y = 0; y < 48; y++) {
             if (wrld[x][y].flwr == 'w') {
                 wCount++;
             } else if (wrld[x][y].flwr == 'b') {
                 bCount++;
+            } else if (wrld[x][y].flwr == 'd') {
+                dCount++;
             }
             tCount += wrld[x][y].temp
         }
     }
     wT.push(wCount);
     bT.push(bCount);
+    if (prT == true) {
+        dT.push(dCount);
+    }
     pT.push(Math.floor(tCount));
-    sT.push(document.getElementById("sun").value / 100 * 40 * 24);
+    sT.push(document.getElementById("sun").value);
 
     if (wT.length > graph) {
         wT = wT.slice(wT.length - graph, wT.length)
@@ -133,12 +197,15 @@ function data() {
     if (sT.length > graph) {
         sT = sT.slice(sT.length - graph, sT.length)
     }
+    if (dT.length > graph) {
+        dT = dT.slice(dT.length - graph, dT.length)
+    }
 }
 
 function life() {
     for (let x = 0; x < 80; x++) {
         for (let y = 0; y < 48; y++) {
-            if (wrld[x][y].flwr !== undefined && wrld[x][y].flwr.includes('t') !== true) {
+            if ((wrld[x][y].flwr == 'b' || wrld[x][y].flwr == 'w') && wrld[x][y].flwr.includes('t') !== true) {
 
                 let localPop = 0;
                 for (let xl = -4; xl < 5; xl++) {
@@ -153,7 +220,7 @@ function life() {
                     }
                 }
 
-                if (Math.random() < 1 - 0.00068 * Math.pow(40 - localPop, 2)) {
+                if (Math.random() < 2.2 * (1 - 0.00016 * Math.pow(81 - localPop, 2))) {
                     wrld[x][y].flwr = undefined;
 
 
@@ -163,10 +230,43 @@ function life() {
                     let newY = Math.floor(Math.random() * 3) - 1 + y;
                     if (wrld[newX] !== undefined) {
                         if (wrld[newX][newY] !== undefined) {
-                            wrld[newX][newY].flwr = wrld[x][y].flwr + 't';
+                            if (wrld[newX][newY].flwr == undefined) {
+                                wrld[newX][newY].flwr = wrld[x][y].flwr + 't';
+                            }
                         }
                     }
                 }
+            } else if (wrld[x][y].flwr == 'd') {
+                let localPop = 0;
+                for (let xl = -12; xl < 13; xl++) {
+                    for (let yl = -12; yl < 13; yl++) {
+                        if (wrld[x + xl] !== undefined) {
+                            if (wrld[x + xl][y + yl] !== undefined) {
+                                if (wrld[x + xl][y + yl].flwr == wrld[x][y].flwr) {
+                                    localPop++;
+                                }
+                            }
+                        }
+                    }
+                }
+                if (localPop > 1) {
+                    if (Math.random() > 0.9 - 0.0002 * Math.pow((-wrld[x][y].temp * 100), 2)) {
+                        wrld[x][y].flwr = undefined;
+                    }
+                }
+
+                for (let attempts = 0; attempts < 2; attempts++) {
+                    let newX = Math.floor(Math.random() * 5) - 2 + x;
+                    let newY = Math.floor(Math.random() * 5) - 2 + y;
+                    if (wrld[newX] !== undefined) {
+                        if (wrld[newX][newY] !== undefined) {
+                            if (wrld[newX][newY].flwr == 'b' || wrld[newX][newY].flwr == 'w') {
+                                wrld[newX][newY].flwr = wrld[x][y].flwr + 't';
+                            }
+                        }
+                    }
+                }
+
             }
         }
     }
@@ -178,7 +278,9 @@ function updateFlwr(element) {
         element.flwr = 'w'
     } else if (element.flwr == 'bt') {
         element.flwr = 'b'
-    };
+    } else if (element.flwr == 'dt') {
+        element.flwr = 'd'
+    }
 }
 
 function temp() {
@@ -187,7 +289,9 @@ function temp() {
     wrld.forEach(element => element.forEach(element => element.temp = sun * 0.5));
     for (let x = 0; x < 80; x++) {
         for (let y = 0; y < 48; y++) {
-            wrld[x][y].temp += 0.0265 - 0.00013 * Math.pow(24 - y, 2)
+            if (eqT == true) {
+                wrld[x][y].temp += 0.0265 - 0.00013 * Math.pow(24 - y, 2);
+            }
             if (wrld[x][y].flwr !== undefined) {
                 for (let xl = -5; xl < 6; xl++) {
                     for (let yl = -5; yl < 6; yl++) {
@@ -197,7 +301,7 @@ function temp() {
                                     if (wrld[x][y].flwr == 'w') {
                                         //let alb = sun * 0.4 + sun * 0.1 * (Math.sqrt(Math.pow(xl, 2) + Math.pow(yl, 2)) / 3.5);
                                         wrld[x + xl][y + yl].temp -= alb - alb * Math.sqrt(Math.pow(xl, 2) + Math.pow(yl, 2)) / 3.5;
-                                    } else {
+                                    } else if (wrld[x][y].flwr == 'b') {
                                         //let alb = sun * 0.4 + sun * 0.1 * (Math.sqrt(Math.pow(xl, 2) + Math.pow(yl, 2)) / 3.5);
                                         wrld[x + xl][y + yl].temp += alb - alb * Math.sqrt(Math.pow(xl, 2) + Math.pow(yl, 2)) / 3.5;
                                     }
@@ -209,6 +313,9 @@ function temp() {
             }
         }
     }
+    /*let totalTemp = 0;
+    wrld.forEach(element => element.forEach(element => totalTemp += element.temp));
+    wrld.forEach(element => element.forEach(element => element.temp = totalTemp/(80*48)));*/
 }
 
 function draw() {
@@ -272,6 +379,10 @@ function draw() {
                 let flower = blk;
                 ctx.drawImage(flower, (x) * sX, (y) * sY, sX, sY);
             }
+            if (wrld[x][y].flwr == 'd') {
+                let flower = der;
+                ctx.drawImage(flower, (x) * sX, (y) * sY, sX, sY);
+            }
             //ctx.fillStyle = "#000";
             //ctx.font = "10px Arial";
             //ctx.fillText(Math.floor(wrld[x][y].temp * 100), x * 25 + 13, y * 25 + 13);
@@ -282,27 +393,12 @@ function draw() {
     ctx.globalAlpha = 0.4;
 
 
-    ctx.strokeStyle = "#fff";
-    ctx.beginPath();
-    ctx.moveTo(0, 600 - Math.floor(wT[0] / graph * ctx.canvas.height + 3));
-    for (let k = 0; k <= graph; k++) {
-        ctx.lineTo(ctx.canvas.width / graph * k, 600 - Math.floor(wT[k - 1] / graph * ctx.canvas.height + ctx.lineWidth));
-    }
-    ctx.stroke();
-
-    ctx.strokeStyle = "#000";
-    ctx.beginPath();
-    ctx.moveTo(0, 600 - Math.floor(bT[0] / graph * ctx.canvas.height + 3));
-    for (let k = 0; k <= graph; k++) {
-        ctx.lineTo(ctx.canvas.width / graph * k, 600 - Math.floor(bT[k - 1] / graph * ctx.canvas.height + ctx.lineWidth));
-    }
-    ctx.stroke();
 
     ctx.strokeStyle = "#ffc107";
     ctx.beginPath();
-    ctx.moveTo(0, -sT[0] * (ctx.canvas.height / 2 / 480) + ctx.canvas.height / 2);
+    ctx.moveTo(0, -sT[0] * (ctx.canvas.height / 50 / 2) + ctx.canvas.height / 2);
     for (let k = 0; k <= graph; k++) {
-        ctx.lineTo(ctx.canvas.width / graph * k, -sT[k - 1] * (ctx.canvas.height / 2 / 480) + ctx.canvas.height / 2);
+        ctx.lineTo(ctx.canvas.width / graph * k, -sT[k - 1] * (ctx.canvas.height / 50 / 2) + ctx.canvas.height / 2);
     }
     ctx.stroke();
 
@@ -310,8 +406,37 @@ function draw() {
     ctx.beginPath();
     ctx.moveTo(0, -pT[0] * (ctx.canvas.height / 2 / 240) + ctx.canvas.height / 2);
     for (let k = 0; k <= graph; k++) {
-        ctx.lineTo(ctx.canvas.width / graph * k, -pT[k - 1] * (ctx.canvas.height / 2 / 240) + ctx.canvas.height / 2);
+        ctx.lineTo(ctx.canvas.width / graph * k, -pT[k - 1] * (ctx.canvas.height / (80 * 48) * 2) + ctx.canvas.height / 2);
     }
     ctx.stroke();
+
+    let maxPop = 400;
+
+    ctx.strokeStyle = "#fff";
+    ctx.beginPath();
+    ctx.moveTo(0, ctx.canvas.height - Math.floor(wT[0] / maxPop / 4 * ctx.canvas.height));
+    for (let k = 0; k <= graph; k++) {
+        ctx.lineTo(ctx.canvas.width / graph * k, ctx.canvas.height - Math.floor(wT[k - 1] / maxPop / 4 * ctx.canvas.height));
+    }
+    ctx.stroke();
+
+    ctx.strokeStyle = "#000";
+    ctx.beginPath();
+    ctx.moveTo(0, ctx.canvas.height - Math.floor(bT[0] / maxPop / 4 * ctx.canvas.height));
+    for (let k = 0; k <= graph; k++) {
+        ctx.lineTo(ctx.canvas.width / graph * k, ctx.canvas.height - Math.floor(bT[k - 1] / maxPop / 4 * ctx.canvas.height));
+    }
+    ctx.stroke();
+
+    if (prT == true) {
+        ctx.globalAlpha = 1;
+        ctx.strokeStyle = "#795548";
+        ctx.beginPath();
+        ctx.moveTo(0, ctx.canvas.height - Math.floor(dT[0] / maxPop / 4 * ctx.canvas.height));
+        for (let k = 0; k <= graph; k++) {
+            ctx.lineTo(ctx.canvas.width / graph * k, ctx.canvas.height - Math.floor(dT[k - 1] / maxPop / 4 * ctx.canvas.height));
+        }
+        ctx.stroke();
+    }
 
 }
