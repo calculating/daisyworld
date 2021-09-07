@@ -286,14 +286,14 @@ function life() {
                                 let variability = 0.1;
                                 if (evT == false) {
                                     wrld[newX][newY].genetics = wrld[x][y].genetics;
-                                } else if (wrld[x][y].genetics > 0.25 && wrld[x][y].genetics < 1.75) {
-                                    wrld[newX][newY].genetics = wrld[x][y].genetics + Math.random() * variability - variability / 2;
-                                } else if (wrld[x][y].genetics < 0.25) {
-                                    wrld[newX][newY].genetics = wrld[x][y].genetics + variability / 10;
-                                } else if (wrld[x][y].genetics > 1.75) {
-                                    wrld[newX][newY].genetics = wrld[x][y].genetics - variability / 10;
-                                } else {
-                                    wrld[newX][newY].genetics = wrld[x][y].genetics;
+                                } else if (Math.random() > .9) {
+                                    if (wrld[x][y].genetics > 0.25 && wrld[x][y].genetics < 1.75) {
+                                        wrld[newX][newY].genetics = wrld[x][y].genetics + Math.random() * variability - variability / 2;
+                                    } else if (wrld[x][y].genetics <= 0.25) {
+                                        wrld[newX][newY].genetics = wrld[x][y].genetics + variability / 10;
+                                    } else if (wrld[x][y].genetics >= 1.75) {
+                                        wrld[newX][newY].genetics = wrld[x][y].genetics - variability / 10;
+                                    }
                                 }
                             }
                         }
